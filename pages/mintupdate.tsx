@@ -14,7 +14,8 @@ const Home: NextPage = () => {
 	const [file, setFile] = useState<File | null>(null)
     const [percent, setPercent] = useState("");
   const [recipient, setRecipient] = useState("");
- const contractaddress = '0xc6Adc341f0e2693803021DFc6744DcCe6cab7dab';
+//   0xc6Adc341f0e2693803021DFc6744DcCe6cab7dab
+ const contractaddress = '';
    const [contractName, setcontractName] = useState(contractaddress);
 
    // const router = useRouter();
@@ -93,7 +94,17 @@ console.log('working');
         
 		<div>
             <form onSubmit={uploadToIpfs}>
-                 <label>Enter  address:&nbsp;&nbsp;&nbsp;
+                 
+                    <label>Contract  Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input 
+          type="text" 
+          value={contractName}
+          onChange={(e) => setcontractName(e.target.value)}
+        />
+      </label>
+      <br/>
+      <br/>
+      <label>Enter  address:&nbsp;&nbsp;&nbsp;
         <input 
           type="text" 
           value={recipient}
