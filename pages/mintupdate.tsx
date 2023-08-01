@@ -13,8 +13,13 @@ import { AiOutlineClose, AiOutlineCloudUpload } from "react-icons/ai";
 const Home: NextPage = () => {
 	const [file, setFile] = useState<File | null>(null)
     const [percent, setPercent] = useState("");
+    const [image, setImage] = useState("");
   const [recipient, setRecipient] = useState("");
-//   0xc6Adc341f0e2693803021DFc6744DcCe6cab7dab
+  const [name, setName] = useState("test name");
+  const [description, setDescription] = useState("test discription");
+  const [uri, setUri] = useState("");
+//   0xc6Adc341f0e2693803021DFc6744DcCe6cab7dab contractid
+// 0x1A409E1473C6a92E45DbF7363C1532D5D3A1a3dF myid
  const contractaddress = '';
    const [contractName, setcontractName] = useState(contractaddress);
 
@@ -24,12 +29,29 @@ const Home: NextPage = () => {
 // "0x22bf39DB3AddE6DB848B20BEE9798009Da03820E"
     const { contract } = useContract(contractName);
 console.log('contract', contract);
+const metadata = {
+  "name": name,
+    "description": description,
+    "image": image,
+    "external_url": "",
+    "attributes": [
+        {
+            "trait_type": "Membership",
+            "value": "bluevinci"
+        }
+    ]
+};
 
     const { mutateAsync: mintTo, isLoading } = useContractWrite(contract, "mintTo")
 
   const call = async () => {
+
+
+// setUri('https://bafybeiacfejonfjuk5vdbdum4cxsc3j7sjebkjs6imydsrl6p3sofx4gz4.ipfs.dweb.link/');
+
+    
     try {
-      const data = await mintTo({ args: [recipient, percent] });
+      const data = await mintTo({ args: [recipient, uri] });
       console.info("contract call successs", data);
       alert('success');
     } catch (err) {
@@ -38,22 +60,50 @@ console.log('contract', contract);
     }
   }
 
+const call1 = async() =>{
+
+    console.log('image',image);
+
+    const uploadUrl = await upload({
+			data: [metadata],
+			options: {
+				uploadWithGatewayUrl: true,
+				uploadWithoutDirectory: true,
+			},
+		})
+        let newver = uploadUrl.toString();
+        console.log('url', newver)
+        setUri(newver);
+
+}
+
+
+
 
 
 useEffect(()=>{
 
-    if(percent && recipient){
+    if(image){
+
+
+call1()
+
+
+
+
+    if(image && recipient && uri){
+        console.log('uri called')
         console.log('percentinside',percent)
         console.log('recipientinside',recipient)
 
-     call();  
-     console.log('done');
-       setPercent('');
+    call();  
+     console.log('call done');
+       setImage('');
+    }
     }
 
 
-
-},[percent])
+},[image,uri])
 
 
 	const { mutateAsync: upload } = useStorageUpload()
@@ -72,15 +122,16 @@ useEffect(()=>{
     // setFile(uploadUrl);
     let newver = uploadUrl.toString();
     console.log('newver',newver);
-    setPercent(newver);
-		console.log("Uploaded to IPFS: " + uploadUrl)
-     console.log('recipient',recipient)
-     console.log('percent',percent)
-     setTimeout(function(){
-          console.log('percent2',percent)
+    setImage(newver);
+	// 	console.log("Uploaded to IPFS: " + uploadUrl)
+    //  console.log('recipient',recipient)
+    //  console.log('percent',percent)
+    // //  setTimeout(function(){
+    //       console.log('percent2',percent)
        
-        }, 4000);
+    //     }, 4000);
 console.log('working');
+
 
 	}
 
@@ -104,7 +155,25 @@ console.log('working');
       </label>
       <br/>
       <br/>
-      <label>Enter  address:&nbsp;&nbsp;&nbsp;
+      <label>Enter  Name:&nbsp;&nbsp;&nbsp;
+        <input 
+          type="text" 
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
+      <br/>
+      <br/>
+      <label>Enter  Discription:&nbsp;&nbsp;&nbsp;
+        <input 
+          type="text" 
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </label>
+      <br/>
+      <br/>
+      <label>Enter your  address:&nbsp;&nbsp;&nbsp;
         <input 
           type="text" 
           value={recipient}
