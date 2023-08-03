@@ -4,7 +4,7 @@ import Layout from 'components/Layout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons'
 import { useStorageUpload } from "@thirdweb-dev/react"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import React from 'react'
 import { useAccount } from "wagmi";
 import { ConnectWallet, useAddress, useSDK , useContract , useContractRead,useContractWrite  } from "@thirdweb-dev/react";
@@ -13,11 +13,15 @@ import { AiOutlineClose, AiOutlineCloudUpload } from "react-icons/ai";
 const Home: NextPage = () => {
 	const [file, setFile] = useState<File | null>(null)
     const [percent, setPercent] = useState("");
+      const [myCar, setMyCar] = useState("nft-collection");
     const [image, setImage] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [name, setName] = useState("test name");
-  const [description, setDescription] = useState("test discription");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [uri, setUri] = useState("");
+  const [_tokenId, set_tokenId] = useState("");
+  const [_amount, set_amount] = useState("");
+  const [displayv, set_displayv] = useState("none");
 //   0xc6Adc341f0e2693803021DFc6744DcCe6cab7dab contractid
 // 0x1A409E1473C6a92E45DbF7363C1532D5D3A1a3dF myid
  const contractaddress = '';
@@ -51,9 +55,26 @@ const metadata = {
 
     
     try {
+
+
+      if(myCar == 'nft-collection'){
+
+   
       const data = await mintTo({ args: [recipient, uri] });
       console.info("contract call successs", data);
       alert('success');
+   }else{
+
+
+
+    let id = Number(_tokenId);
+    let amount = Number(_amount);
+    // const data = await contract.call("mintTo", [recipient, _tokenId, uri, _amount])
+         const data = await mintTo({ args: [recipient, id, uri, amount] });
+
+   }
+
+
     } catch (err) {
       console.error("contract call failure", err);
       alert('error');
@@ -134,6 +155,15 @@ console.log('working');
 
 
 	}
+  const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setMyCar(event.target.value);
+    if(event.target.value == 'nft-collection'){
+      set_displayv('none');
+    }else{
+      set_displayv('block');
+    }
+    
+  }
 
 	return (
          <Layout>
@@ -145,25 +175,49 @@ console.log('working');
         
 		<div>
             <form onSubmit={uploadToIpfs}>
-                 
-                    <label>Contract  Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              
+              <label>Contract Type:&nbsp;
+            
+            
+                <select  onChange={handleChange} className="form-control">
+        <option value="nft-collection">721 </option>
+        <option value="edition">1155</option>
+      </select> 
+   </label> 
+
+      <br></br>
+      <br></br> 
+         <label>Contract  Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input 
           type="text" 
           value={contractName}
           onChange={(e) => setcontractName(e.target.value)}
         />
       </label>
-      <br/>
-      <br/>
-      <label>Enter  Name:&nbsp;&nbsp;&nbsp;
+      <br></br>
+      <br></br> 
+                 
+      <label style={{display:displayv}}> TokenId:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input 
           type="text" 
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={_tokenId}
+          onChange={(e) => set_tokenId(e.target.value)}
         />
+         <br/>
+      <br/>
       </label>
+     
+      <label style={{display:displayv}}>Amount :&nbsp;&nbsp;&nbsp;
+        <input 
+          type="text" 
+          value={_amount}
+          onChange={(e) => set_amount(e.target.value)}
+        />
+        <br/>
       <br/>
-      <br/>
+      </label>
+      
       <label>Enter  Discription:&nbsp;&nbsp;&nbsp;
         <input 
           type="text" 
@@ -201,7 +255,7 @@ console.log('working');
                 size="large"
               >
                 Mint Now
-              </Button>
+      </Button>
             </form>
 		</div>
         </Flex>
