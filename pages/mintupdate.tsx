@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [uri, setUri] = useState("");
-  const [_tokenId, set_tokenId] = useState("");
+  const [_tokenId, set_tokenId] = useState("115792089237316195423570985008687907853269984665640564039457584007913129639935");
   const [_amount, set_amount] = useState("");
   const [displayv, set_displayv] = useState("none");
 //   0xc6Adc341f0e2693803021DFc6744DcCe6cab7dab contractid
@@ -34,7 +34,7 @@ const Home: NextPage = () => {
     const { contract } = useContract(contractName);
 console.log('contract', contract);
 const metadata = {
-  "name": name,
+    "name": name,
     "description": description,
     "image": image,
     "external_url": "",
@@ -164,6 +164,7 @@ console.log('working');
     }
     
   }
+  
 
 	return (
          <Layout>
@@ -198,7 +199,7 @@ console.log('working');
       <br></br>
       <br></br> 
                  
-      <label style={{display:displayv}}> TokenId:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <label style={{display:'none'}}> TokenId:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input 
           type="text" 
           value={_tokenId}
@@ -217,6 +218,16 @@ console.log('working');
         <br/>
       <br/>
       </label>
+      
+      <label>Enter  Name:&nbsp;&nbsp;&nbsp;
+        <input 
+          type="text" 
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
+      <br/>
+      <br/>
       
       <label>Enter  Discription:&nbsp;&nbsp;&nbsp;
         <input 
