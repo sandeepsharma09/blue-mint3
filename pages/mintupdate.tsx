@@ -67,10 +67,10 @@ const metadata = {
 
 
 
-    let id = Number(_tokenId);
+    // let id = Number(_tokenId);
     let amount = Number(_amount);
     // const data = await contract.call("mintTo", [recipient, _tokenId, uri, _amount])
-         const data = await mintTo({ args: [recipient, id, uri, amount] });
+         const data = await mintTo({ args: [recipient, _tokenId, uri, amount] });
 
    }
 
